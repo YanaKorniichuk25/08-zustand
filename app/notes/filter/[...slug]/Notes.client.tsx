@@ -5,10 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchNotes, NotesResponse } from "@/lib/api";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import Pagination from "@/components/Pagination/Pagination";
-import Modal from "@/components/Modal/Modal";
-import NoteForm from "@/components/NoteForm/NoteForm";
 import NoteList from "@/components/NoteList/NoteList";
 import css from "./NotesPage.module.css";
+import { useRouter } from "next/navigation";
 
 function useDebounce<T>(value: T, delay = 300): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -26,10 +25,11 @@ interface NotesClientProps {
 }
 
 export default function NotesClient({ tag }: NotesClientProps) {
+  const router = useRouter();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const debouncedSearch = useDebounce(searchQuery, 300);
 
   useEffect(() => {
@@ -58,7 +58,12 @@ export default function NotesClient({ tag }: NotesClientProps) {
             onPageChange={setCurrentPage}
           />
         )}
-        <button onClick={() => setIsModalOpen(true)} className={css.button}>
+        {/* Замінили Link на button щоб прибрати підкреслення */}
+        <button
+          type="button"
+          className={css.button}
+          onClick={() => router.push("/notes/action/create")}
+        >
           Create note +
         </button>
       </header>
@@ -70,12 +75,6 @@ export default function NotesClient({ tag }: NotesClientProps) {
         <NoteList notes={data.notes} />
       ) : (
         <p>No notes found</p>
-      )}
-
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <NoteForm onClose={() => setIsModalOpen(false)} />
-        </Modal>
       )}
     </div>
   );

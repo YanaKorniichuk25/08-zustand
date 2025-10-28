@@ -1,20 +1,28 @@
-import type { Metadata } from "next";
-import css from "./CreateNote.module.css";
 import NoteForm from "@/components/NoteForm/NoteForm";
-import { appBaseUrl, defaultOgImage } from "@/config/metaData";
+import css from "./CreateNote.module.css";
+import {
+  HOME_PAGE,
+  OG_DESCRIPTION,
+  OG_IMAGE,
+  SITE_NAME,
+} from "@/config/metaData";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Create new note — NoteHub",
-  description: "Add a new note to your NoteHub collection.",
+  title: `${SITE_NAME} | Create new note`,
+  description: OG_DESCRIPTION,
   openGraph: {
-    title: "Create new note — NoteHub",
-    description: "Add a new note to your NoteHub collection.",
-    url: `${appBaseUrl}/notes/action/create`,
-    images: [defaultOgImage],
+    title: `${SITE_NAME} | Create new note`,
+    description:
+      "Create, edit, and organize notes with NoteHUB — your personal hub for creativity and productivity.",
+    url: `${HOME_PAGE}/notes/action/create`,
+    siteName: SITE_NAME,
+    images: [OG_IMAGE],
+    type: "website",
   },
 };
 
-export default function CreateNotePage() {
+const CreateNote = async () => {
   return (
     <main className={css.main}>
       <div className={css.container}>
@@ -23,4 +31,6 @@ export default function CreateNotePage() {
       </div>
     </main>
   );
-}
+};
+
+export default CreateNote;
