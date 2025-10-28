@@ -6,7 +6,11 @@ import css from "./NoteForm.module.css";
 import { useNoteStore } from "@/lib/store/noteStore";
 import { createNote } from "@/lib/api";
 
-export default function NoteForm() {
+type NoteFormProps = {
+  onClose?: () => void; // додаємо проп onClose
+};
+
+export default function NoteForm({ onClose }: NoteFormProps) {
   const router = useRouter();
   const { draft, setDraft, clearDraft } = useNoteStore();
 
@@ -17,7 +21,9 @@ export default function NoteForm() {
   }, [draft]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     const updated = { ...form, [name]: value };
@@ -29,11 +35,19 @@ export default function NoteForm() {
     e.preventDefault();
     await createNote(form);
     clearDraft();
-    router.back();
+    if (onClose) {
+      onClose();
+    } else {
+      router.back();
+    }
   };
 
   const handleCancel = () => {
-    router.back(); // draft залишається
+    if (onClose) {
+      onClose();
+    } else {
+      router.back();
+    }
   };
 
   return (
