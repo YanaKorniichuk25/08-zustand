@@ -1,6 +1,6 @@
 import css from "./Footer.module.css";
 
-export function Footer() {
+export default function Footer() {
   return (
     <footer className={css.footer}>
       <div className={css.content}>

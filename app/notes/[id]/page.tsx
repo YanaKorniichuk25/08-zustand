@@ -5,23 +5,35 @@ import {
 } from "@tanstack/react-query";
 import { getSingleNote } from "@/lib/api";
 import NoteDetailsClient from "./NoteDetails.client";
-import type { Metadata } from "next";
+import { HOME_PAGE, OG_IMAGE, SITE_NAME } from "@/config/metaData";
+import { Metadata } from "next";
 
-interface NotePageProps {
-  params: Promise<{ id: string }>;
+interface NoteDetailsProps {
+  params: { id: string };
 }
 
 export async function generateMetadata({
   params,
-}: NotePageProps): Promise<Metadata> {
-  const { id } = await params;
+}: NoteDetailsProps): Promise<Metadata> {
+  const { id } = params;
+  const note = await getSingleNote(id);
+
   return {
-    title: `Note ${id} — NoteHub`,
+    title: `${SITE_NAME} | ${note.title}`,
+    description: note.content.slice(0, 30),
+    openGraph: {
+      title: `${SITE_NAME} | ${note.title}`,
+      description: note.content.slice(0, 100),
+      url: `${HOME_PAGE}/notes/${id}`,
+      siteName: SITE_NAME,
+      images: [OG_IMAGE],
+      type: "article",
+    },
   };
 }
 
-export default async function NotePage({ params }: NotePageProps) {
-  const { id } = await params;
+const NoteDetails = async ({ params }: NoteDetailsProps) => {
+  const { id } = params;
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
@@ -34,4 +46,6 @@ export default async function NotePage({ params }: NotePageProps) {
       <NoteDetailsClient noteId={id} />
     </HydrationBoundary>
   );
-}
+};
+
+export default NoteDetails;

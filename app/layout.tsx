@@ -1,32 +1,40 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "modern-normalize";
-import { Footer } from "../components/Footer/Footer";
-import Header from "../components/Header/Header";
-import { TanStackProvider } from "../components/TanStackProvider/TanStackProvider";
-import { Toaster } from "react-hot-toast";
-import React from "react";
+import { Roboto } from "next/font/google";
+import Footer from "@/components/Footer/Footer";
+import Header from "@/components/Header/Header";
+import { TanStackProvider } from "@/components/TanStackProvider/TanStackProvider";
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-roboto",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "NoteHub",
-  description: "Simple note management app",
+  title: "NoteHub — Manage your notes easily",
+  description: "Create, organize and manage your notes with NoteHub.",
+  openGraph: {
+    title: "NoteHub — Manage your notes easily",
+    description: "Create, organize and manage your notes with NoteHub.",
+    url: "https://your-vercel-app.vercel.app/",
+    images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
+  },
 };
 
-type RootLayoutProps = Readonly<{
+export default function RootLayout({
+  children,
+}: {
   children: React.ReactNode;
-  modal?: React.ReactNode;
-}>;
-
-export default function RootLayout({ children, modal }: RootLayoutProps) {
+}) {
   return (
-    <html lang="en">
-      <body suppressHydrationWarning>
+    <html lang="en" className={roboto.variable}>
+      <body>
         <TanStackProvider>
           <Header />
-          <main>{children}</main>
-          {modal}
+          {children}
           <Footer />
-          <Toaster position="top-right" />
         </TanStackProvider>
       </body>
     </html>
