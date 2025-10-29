@@ -9,7 +9,7 @@ interface NoteDraft {
 
 interface NoteStore {
   draft: NoteDraft;
-  setDraft: (note: NoteDraft) => void;
+  setDraft: (note: Partial<NoteDraft>) => void;
   clearDraft: () => void;
 }
 
@@ -23,9 +23,14 @@ export const useNoteStore = create<NoteStore>()(
   persist(
     (set) => ({
       draft: initialDraft,
-      setDraft: (note) => set(() => ({ draft: note })),
-      clearDraft: () => set(() => ({ draft: initialDraft })),
+      setDraft: (note) =>
+        set((state) => ({
+          draft: { ...state.draft, ...note },
+        })),
+      clearDraft: () => set({ draft: initialDraft }),
     }),
-    { name: "notehub-draft" }
+    {
+      name: "note-draft-storage",
+    }
   )
 );

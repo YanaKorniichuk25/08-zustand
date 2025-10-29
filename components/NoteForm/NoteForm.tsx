@@ -1,11 +1,10 @@
 "use client";
 
 import css from "./NoteForm.module.css";
-import { createNote } from "@/lib/api"; // без NewNoteData
+import { createNote } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tagsList } from "@/types/note";
 import { useRouter } from "next/navigation";
-
 import { useNoteStore } from "@/lib/store/noteStore";
 
 export type NoteFormValues = {
@@ -17,7 +16,6 @@ export type NoteFormValues = {
 export default function NoteForm() {
   const router = useRouter();
   const queryClient = useQueryClient();
-
   const { draft, setDraft, clearDraft } = useNoteStore();
 
   const handleChange = (
@@ -43,10 +41,7 @@ export default function NoteForm() {
   });
 
   const handleSubmit = (formData: FormData) => {
-    // Тип беремо напряму з параметра createNote
-    const values = Object.fromEntries(formData) as Parameters<
-      typeof createNote
-    >[0];
+    const values = Object.fromEntries(formData) as NoteFormValues;
     mutation.mutate(values);
   };
 
@@ -61,6 +56,7 @@ export default function NoteForm() {
           name="title"
           className={css.input}
           onChange={handleChange}
+          required
         />
       </div>
 
@@ -73,6 +69,7 @@ export default function NoteForm() {
           rows={8}
           className={css.textarea}
           onChange={handleChange}
+          required
         />
       </div>
 

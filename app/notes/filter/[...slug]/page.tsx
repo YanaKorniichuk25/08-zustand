@@ -11,25 +11,26 @@ import {
   OG_DESCRIPTION,
   SITE_NAME,
 } from "@/config/metaData";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 type Props = {
-  params: Promise<{ slug: string[] }>;
+  params: { slug: string[] };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const tag = slug[0] === "All" ? "" : slug[0];
-
-  const title = `${SITE_NAME} | ${tag === "All" ? "All notes" : `Notes filtered by ${slug}`}`;
+  const { slug } = params;
+  const tag = slug?.[0] === "All" ? "" : slug?.[0];
+  const title = `${SITE_NAME} | ${
+    tag ? `Notes filtered by ${tag}` : "All notes"
+  }`;
 
   return {
-    title: title,
+    title,
     description: OG_DESCRIPTION,
     openGraph: {
-      title: title,
+      title,
       description: OG_DESCRIPTION,
-      url: `${HOME_PAGE}/notes/filter/${slug}`,
+      url: `${HOME_PAGE}/notes/filter/${tag || "All"}`,
       siteName: SITE_NAME,
       images: [OG_IMAGE],
       type: "article",
@@ -38,8 +39,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function NotesPage({ params }: Props) {
-  const { slug } = await params;
-  const tag = slug[0] === "All" ? "" : slug[0];
+  const { slug } = params;
+  const tag = slug?.[0] === "All" ? "" : slug?.[0];
 
   const queryClient = new QueryClient();
   const search = "";
@@ -51,7 +52,7 @@ export default async function NotesPage({ params }: Props) {
       fetchNotes({
         page,
         search,
-        ...(tag && tag !== "All" ? { tag } : {}),
+        ...(tag ? { tag } : {}),
       }),
   });
 

@@ -58,7 +58,6 @@ export default function NotesClient({ tag }: NotesClientProps) {
             onPageChange={setCurrentPage}
           />
         )}
-        {/* Замінили Link на button щоб прибрати підкреслення */}
         <button
           type="button"
           className={css.button}

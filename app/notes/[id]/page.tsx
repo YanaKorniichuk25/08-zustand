@@ -15,7 +15,7 @@ interface NoteDetailsProps {
 export async function generateMetadata({
   params,
 }: NoteDetailsProps): Promise<Metadata> {
-  const { id } = params;
+  const { id } = await params;
   const note = await getSingleNote(id);
 
   return {
@@ -33,9 +33,8 @@ export async function generateMetadata({
 }
 
 const NoteDetails = async ({ params }: NoteDetailsProps) => {
-  const { id } = params;
+  const { id } = await params;
   const queryClient = new QueryClient();
-
   await queryClient.prefetchQuery({
     queryKey: ["note", id],
     queryFn: () => getSingleNote(id),
@@ -43,7 +42,7 @@ const NoteDetails = async ({ params }: NoteDetailsProps) => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <NoteDetailsClient noteId={id} />
+      <NoteDetailsClient />
     </HydrationBoundary>
   );
 };

@@ -12,6 +12,5 @@ export const OG_IMAGE = {
 export const OG_DESCRIPTION =
   "NoteHUB is your smart workspace for notes, inspiration, and ideas. Create, organize, and share your thoughts in one clean and intuitive place.";
 
-// 🔧 додано для backward compatibility:
 export const appBaseUrl = HOME_PAGE;
 export const defaultOgImage = OG_IMAGE;
